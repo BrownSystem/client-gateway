@@ -1,11 +1,31 @@
-FROM node:20-slim
+# Etapa 1: Instalar todas las dependencias (dev y prod)
+FROM node:20-slim AS deps
 
-# Reducir vulnerabilidades instalando dependencias necesarias y limpiando
-RUN apt-get update && apt-get install -y \
-    openssl \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
-WORKDIR /usr/src/app
+WORKDIR /app
 COPY package*.json ./
-RUN npm install 
+RUN npm ci --legacy-peer-deps
+
+# Etapa 2: Build y Prisma generate
+FROM node:20-slim AS build
+
+WORKDIR /app
+
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+
+
+# Compilar la app
+RUN npm run build
+
+# Etapa 3: Imagen final prod (distroless)
+FROM gcr.io/distroless/nodejs20
+
+WORKDIR /app
+
+# Copiar compilado y node_modules
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/node_modules ./node_modules
+
 EXPOSE 3000
+
+CMD ["dist/main.js"]
