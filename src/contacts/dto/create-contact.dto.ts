@@ -16,10 +16,6 @@ export class CreateContactDto {
 
   @IsString()
   @IsNotEmpty()
-  code: string;
-
-  @IsString()
-  @IsNotEmpty()
   name: string;
 
   @IsString()

@@ -1,7 +1,6 @@
 import { ContactType, DocumentType, IvaCondition } from '../enum';
 export declare class CreateContactDto {
     branchId: string;
-    code: string;
     name: string;
     businessName?: string;
     ivaCondition: IvaCondition;

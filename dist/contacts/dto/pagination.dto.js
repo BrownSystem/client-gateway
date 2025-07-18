@@ -15,6 +15,7 @@ const class_validator_1 = require("class-validator");
 class PaginationDto {
     branchId;
     search;
+    type;
     limit;
     offset;
     constructor(partial = {}) {
@@ -33,6 +34,11 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], PaginationDto.prototype, "search", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], PaginationDto.prototype, "type", void 0);
 __decorate([
     (0, class_validator_1.IsPositive)(),
     (0, class_validator_1.IsOptional)(),

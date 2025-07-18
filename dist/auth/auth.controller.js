@@ -23,14 +23,15 @@ const decorators_1 = require("./decorators");
 const role_auth_enum_1 = require("../common/enum/role.auth.enum");
 const decorators_2 = require("../common/decorators");
 const guards_1 = require("../common/guards");
+const update_user_dto_1 = require("./dto/update-user.dto");
 let AuthController = class AuthController {
     client;
     constructor(client) {
         this.client = client;
     }
-    async findAllUser(id) {
+    async findAllUserBranch(id) {
         try {
-            const response = await (0, rxjs_1.firstValueFrom)(this.client.send({ cmd: 'find.all.user' }, id));
+            const response = await (0, rxjs_1.firstValueFrom)(this.client.send({ cmd: 'find.all.user.branch' }, id));
             return response;
         }
         catch (error) {
@@ -40,6 +41,16 @@ let AuthController = class AuthController {
     async registerUser(registerUserDto) {
         try {
             const response = await (0, rxjs_1.firstValueFrom)(this.client.send({ cmd: 'auth.register.user' }, registerUserDto));
+            return response;
+        }
+        catch (error) {
+            throw new microservices_1.RpcException(error);
+        }
+    }
+    async updateUser(id, updateUserDto) {
+        try {
+            const payload = { ...updateUserDto, id };
+            const response = await (0, rxjs_1.firstValueFrom)(this.client.send({ cmd: 'auth.update.user' }, payload));
             return response;
         }
         catch (error) {
@@ -73,7 +84,7 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
-], AuthController.prototype, "findAllUser", null);
+], AuthController.prototype, "findAllUserBranch", null);
 __decorate([
     (0, common_1.Post)('register'),
     __param(0, (0, common_1.Body)()),
@@ -81,6 +92,16 @@ __decorate([
     __metadata("design:paramtypes", [dto_1.RegisterUserDto]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "registerUser", null);
+__decorate([
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard, guards_1.RolesGuard),
+    (0, decorators_2.Roles)(role_auth_enum_1.RoleAuthEnum.ADMIN, role_auth_enum_1.RoleAuthEnum.MANAGER),
+    (0, common_1.Post)('update/:id'),
+    __param(0, (0, common_1.Param)('id', common_1.ParseUUIDPipe)),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, update_user_dto_1.UpdateUserchDto]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "updateUser", null);
 __decorate([
     (0, common_1.Post)('login'),
     __param(0, (0, common_1.Body)()),

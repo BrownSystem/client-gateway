@@ -9,6 +9,10 @@ export class PaginationDto {
   @IsString()
   search?: string;
 
+  @IsOptional()
+  @IsString()
+  type: string;
+
   @IsPositive()
   @IsOptional()
   @Type(() => Number)

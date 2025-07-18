@@ -18,25 +18,11 @@ import { ICurrentUser } from './interfaces/current.user.interface';
 import { RoleAuthEnum } from 'src/common/enum/role.auth.enum';
 import { Roles } from 'src/common/decorators';
 import { RolesGuard } from 'src/common/guards';
+import { UpdateUserchDto } from './dto/update-user.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(@Inject(NATS_SERVICE) private readonly client: ClientProxy) {}
-
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles(RoleAuthEnum.MANAGER, RoleAuthEnum.ADMIN)
-  @Get('users')
-  async findAllUser() {
-    try {
-      const response = await firstValueFrom(
-        this.client.send({ cmd: 'find.all.users' }, {}),
-      );
-
-      return response;
-    } catch (error) {
-      throw new RpcException(error);
-    }
-  }
 
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(RoleAuthEnum.MANAGER, RoleAuthEnum.ADMIN)
@@ -58,6 +44,24 @@ export class AuthController {
     try {
       const response = await firstValueFrom(
         this.client.send({ cmd: 'auth.register.user' }, registerUserDto),
+      );
+      return response;
+    } catch (error) {
+      throw new RpcException(error);
+    }
+  }
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(RoleAuthEnum.ADMIN, RoleAuthEnum.MANAGER)
+  @Post('update/:id')
+  async updateUser(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() updateUserDto: UpdateUserchDto,
+  ) {
+    try {
+      const payload = { ...updateUserDto, id }; // combinás el id con el resto
+      const response = await firstValueFrom(
+        this.client.send({ cmd: 'auth.update.user' }, payload),
       );
       return response;
     } catch (error) {

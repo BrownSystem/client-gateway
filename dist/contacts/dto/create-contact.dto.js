@@ -14,7 +14,6 @@ const class_validator_1 = require("class-validator");
 const enum_1 = require("../enum");
 class CreateContactDto {
     branchId;
-    code;
     name;
     businessName;
     ivaCondition;
@@ -32,11 +31,6 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateContactDto.prototype, "branchId", void 0);
-__decorate([
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", String)
-], CreateContactDto.prototype, "code", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),

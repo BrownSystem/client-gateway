@@ -67,8 +67,6 @@ let BranchController = class BranchController {
 };
 exports.BranchController = BranchController;
 __decorate([
-    (0, common_1.UseGuards)(auth_guard_1.AuthGuard, guards_1.RolesGuard),
-    (0, decorators_1.Roles)(role_auth_enum_1.RoleAuthEnum.ADMIN),
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
