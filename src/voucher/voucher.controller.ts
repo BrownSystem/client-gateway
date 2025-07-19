@@ -21,6 +21,7 @@ import { RoleAuthEnum } from 'src/common/enum';
 import { Roles } from 'src/common/decorators';
 import { PaginationDto } from './dto/pagination.dto';
 import { CreatePaymentDto } from './dto/create-payment.dto';
+import { UpdateVoucherProductItemDto } from './dto/voucher-product-item.dto';
 
 @Controller('voucher')
 export class VoucherController {
@@ -49,6 +50,25 @@ export class VoucherController {
     }
   }
 
+  @Post('register-payment')
+  async registerPayment(@Body() paymentDto: CreatePaymentDto) {
+    try {
+      const response = await firstValueFrom(
+        this.clientProxy.send({ cmd: 'register_payment' }, paymentDto),
+      );
+
+      return {
+        success: true,
+        data: response?.data || response,
+        message: response?.message || 'Pago registrado correctamente.',
+      };
+    } catch (error) {
+      throw new RpcException(
+        `[GATEWAY] Error al registrar el pago: ${error.message}`,
+      );
+    }
+  }
+
   @Get('search')
   async searchVoucher(@Query() pagination: PaginationDto) {
     try {
@@ -66,21 +86,39 @@ export class VoucherController {
     }
   }
 
-  @Post('register-payment')
-  async registerPayment(@Body() paymentDto: CreatePaymentDto) {
+  @Get('reserved')
+  async findAllReservedProductsByBranchId(@Query() pagination: PaginationDto) {
     try {
       const response = await firstValueFrom(
-        this.clientProxy.send({ cmd: 'register_payment' }, paymentDto),
+        this.clientProxy.send(
+          { cmd: 'find_all_reserved_products' },
+          pagination,
+        ),
       );
-
-      return {
-        success: true,
-        data: response?.data || response,
-        message: response?.message || 'Pago registrado correctamente.',
-      };
+      return response;
     } catch (error) {
       throw new RpcException(
-        `[GATEWAY] Error al registrar el pago: ${error.message}`,
+        `[GATEWAY] Error al obtener los productos reservados: ${error.message}`,
+      );
+    }
+  }
+
+  @Patch('reserved-update/:id')
+  async updateReservedProduct(
+    @Param('id') id: string,
+    @Body() updateVoucherProductItemDto: UpdateVoucherProductItemDto,
+  ) {
+    try {
+      const response = await firstValueFrom(
+        this.clientProxy.send(
+          { cmd: 'update_reserved_product' },
+          { id, data: updateVoucherProductItemDto },
+        ),
+      );
+      return response;
+    } catch (error) {
+      throw new RpcException(
+        `[GATEWAY] Error al actualizar el producto reservado: ${error.message}`,
       );
     }
   }

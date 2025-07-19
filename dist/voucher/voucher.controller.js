@@ -20,6 +20,7 @@ const microservices_1 = require("@nestjs/microservices");
 const rxjs_1 = require("rxjs");
 const pagination_dto_1 = require("./dto/pagination.dto");
 const create_payment_dto_1 = require("./dto/create-payment.dto");
+const voucher_product_item_dto_1 = require("./dto/voucher-product-item.dto");
 let VoucherController = class VoucherController {
     clientProxy;
     constructor(clientProxy) {
@@ -38,15 +39,6 @@ let VoucherController = class VoucherController {
             throw new microservices_1.RpcException(`[GATEWAY] Error al crear el comprobante: ${error.message}`);
         }
     }
-    async searchVoucher(pagination) {
-        try {
-            const response = await (0, rxjs_1.firstValueFrom)(this.clientProxy.send({ cmd: 'find_all_vouchers_condition_payment' }, pagination));
-            return response;
-        }
-        catch (error) {
-            throw new microservices_1.RpcException(`[GATEWAY] Error al obtener las condiciones de pago: ${error.message}`);
-        }
-    }
     async registerPayment(paymentDto) {
         try {
             const response = await (0, rxjs_1.firstValueFrom)(this.clientProxy.send({ cmd: 'register_payment' }, paymentDto));
@@ -60,6 +52,33 @@ let VoucherController = class VoucherController {
             throw new microservices_1.RpcException(`[GATEWAY] Error al registrar el pago: ${error.message}`);
         }
     }
+    async searchVoucher(pagination) {
+        try {
+            const response = await (0, rxjs_1.firstValueFrom)(this.clientProxy.send({ cmd: 'find_all_vouchers_condition_payment' }, pagination));
+            return response;
+        }
+        catch (error) {
+            throw new microservices_1.RpcException(`[GATEWAY] Error al obtener las condiciones de pago: ${error.message}`);
+        }
+    }
+    async findAllReservedProductsByBranchId(pagination) {
+        try {
+            const response = await (0, rxjs_1.firstValueFrom)(this.clientProxy.send({ cmd: 'find_all_reserved_products' }, pagination));
+            return response;
+        }
+        catch (error) {
+            throw new microservices_1.RpcException(`[GATEWAY] Error al obtener los productos reservados: ${error.message}`);
+        }
+    }
+    async updateReservedProduct(id, updateVoucherProductItemDto) {
+        try {
+            const response = await (0, rxjs_1.firstValueFrom)(this.clientProxy.send({ cmd: 'update_reserved_product' }, { id, data: updateVoucherProductItemDto }));
+            return response;
+        }
+        catch (error) {
+            throw new microservices_1.RpcException(`[GATEWAY] Error al actualizar el producto reservado: ${error.message}`);
+        }
+    }
 };
 exports.VoucherController = VoucherController;
 __decorate([
@@ -70,6 +89,13 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], VoucherController.prototype, "create", null);
 __decorate([
+    (0, common_1.Post)('register-payment'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [create_payment_dto_1.CreatePaymentDto]),
+    __metadata("design:returntype", Promise)
+], VoucherController.prototype, "registerPayment", null);
+__decorate([
     (0, common_1.Get)('search'),
     __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
@@ -77,12 +103,20 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], VoucherController.prototype, "searchVoucher", null);
 __decorate([
-    (0, common_1.Post)('register-payment'),
-    __param(0, (0, common_1.Body)()),
+    (0, common_1.Get)('reserved'),
+    __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_payment_dto_1.CreatePaymentDto]),
+    __metadata("design:paramtypes", [pagination_dto_1.PaginationDto]),
     __metadata("design:returntype", Promise)
-], VoucherController.prototype, "registerPayment", null);
+], VoucherController.prototype, "findAllReservedProductsByBranchId", null);
+__decorate([
+    (0, common_1.Patch)('reserved-update/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, voucher_product_item_dto_1.UpdateVoucherProductItemDto]),
+    __metadata("design:returntype", Promise)
+], VoucherController.prototype, "updateReservedProduct", null);
 exports.VoucherController = VoucherController = __decorate([
     (0, common_1.Controller)('voucher'),
     __param(0, (0, common_1.Inject)(config_1.NATS_SERVICE)),
