@@ -11,6 +11,7 @@ import {
   Query,
   Res,
   HttpStatus,
+  Header,
 } from '@nestjs/common';
 import { CreateVoucherDto } from './dto/create-voucher.dto';
 import { UpdateVoucherDto } from './dto/update-voucher.dto';
@@ -32,8 +33,6 @@ export class VoucherController {
     @Inject(NATS_SERVICE) private readonly clientProxy: ClientProxy,
   ) {}
 
-  // @UseGuards(AuthGuard, RolesGuard)
-  // @Roles(RoleAuthEnum.ADMIN, RoleAuthEnum.MANAGER)
   @Post()
   async create(@Body() createVoucherDto: CreateVoucherDto) {
     try {
@@ -106,37 +105,29 @@ export class VoucherController {
     }
   }
 
-  @Get('pdf/:id')
-  async generatePdf(
+  @Get('html/:id') // opcionalmente cambiá a 'html/:id'
+  @Header('Content-Type', 'text/html')
+  async generateHtml(
     @Param('id') id: string,
     @Query('download') download: string,
     @Res() res: Response,
   ) {
     try {
-      const rawBuffer = await firstValueFrom(
-        this.clientProxy.send({ cmd: 'generate_voucher_pdf' }, id),
+      const html = await firstValueFrom(
+        this.clientProxy.send({ cmd: 'generate_voucher_html' }, id),
       );
 
-      const buffer = Buffer.isBuffer(rawBuffer)
-        ? rawBuffer
-        : Buffer.from(rawBuffer.data);
-
-      // Verificación (opcional pero útil)
-      console.log('Buffer length:', buffer.length);
-      console.log('First 4 bytes:', buffer.slice(0, 4));
-
-      res.setHeader('Content-Type', 'application/pdf');
       res.setHeader(
         'Content-Disposition',
-        `${download === 'true' ? 'attachment' : 'inline'}; filename=comprobante-${id}.pdf`,
+        `${download === 'true' ? 'attachment' : 'inline'}; filename=comprobante-${id}.html`,
       );
 
-      return res.status(HttpStatus.OK).send(buffer);
+      return res.status(HttpStatus.OK).send(html);
     } catch (error) {
-      console.error('Error al generar o enviar el PDF:', error);
+      console.error('Error al generar el HTML:', error);
       return res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .json({ message: 'No se pudo generar el PDF del comprobante.' });
+        .json({ message: 'No se pudo generar el comprobante.' });
     }
   }
 
