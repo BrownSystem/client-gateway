@@ -17,6 +17,7 @@ const branch_product_module_1 = require("./branch-product/branch-product.module"
 const contacts_module_1 = require("./contacts/contacts.module");
 const banks_module_1 = require("./banks/banks.module");
 const voucher_module_1 = require("./voucher/voucher.module");
+const notification_module_1 = require("./notification/notification.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -32,6 +33,7 @@ exports.AppModule = AppModule = __decorate([
             contacts_module_1.ContactsModule,
             banks_module_1.BanksModule,
             voucher_module_1.VoucherModule,
+            notification_module_1.NotificationModule,
         ],
     })
 ], AppModule);

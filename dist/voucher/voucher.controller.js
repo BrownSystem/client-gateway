@@ -70,6 +70,25 @@ let VoucherController = class VoucherController {
             throw new microservices_1.RpcException(`[GATEWAY] Error al obtener los productos reservados: ${error.message}`);
         }
     }
+    async generatePdf(id, download, res) {
+        try {
+            const rawBuffer = await (0, rxjs_1.firstValueFrom)(this.clientProxy.send({ cmd: 'generate_voucher_pdf' }, id));
+            const buffer = Buffer.isBuffer(rawBuffer)
+                ? rawBuffer
+                : Buffer.from(rawBuffer.data);
+            console.log('Buffer length:', buffer.length);
+            console.log('First 4 bytes:', buffer.slice(0, 4));
+            res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader('Content-Disposition', `${download === 'true' ? 'attachment' : 'inline'}; filename=comprobante-${id}.pdf`);
+            return res.status(common_1.HttpStatus.OK).send(buffer);
+        }
+        catch (error) {
+            console.error('Error al generar o enviar el PDF:', error);
+            return res
+                .status(common_1.HttpStatus.INTERNAL_SERVER_ERROR)
+                .json({ message: 'No se pudo generar el PDF del comprobante.' });
+        }
+    }
     async updateReservedProduct(id, updateVoucherProductItemDto) {
         try {
             const response = await (0, rxjs_1.firstValueFrom)(this.clientProxy.send({ cmd: 'update_reserved_product' }, { id, data: updateVoucherProductItemDto }));
@@ -109,6 +128,15 @@ __decorate([
     __metadata("design:paramtypes", [pagination_dto_1.PaginationDto]),
     __metadata("design:returntype", Promise)
 ], VoucherController.prototype, "findAllReservedProductsByBranchId", null);
+__decorate([
+    (0, common_1.Get)('pdf/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Query)('download')),
+    __param(2, (0, common_1.Res)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, Object]),
+    __metadata("design:returntype", Promise)
+], VoucherController.prototype, "generatePdf", null);
 __decorate([
     (0, common_1.Patch)('reserved-update/:id'),
     __param(0, (0, common_1.Param)('id')),

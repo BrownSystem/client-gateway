@@ -72,8 +72,4 @@ export class ContactsController {
       throw new RpcException(`Failed to search contacts: ${error.message}`);
     }
   }
-  // @Patch(':id')
-  // async update(@Param('id') id: string, @Body() updateContactDto: UpdateContactDto) {
-  //   return this.contactsService.update(+id, updateContactDto);
-  // }
 }

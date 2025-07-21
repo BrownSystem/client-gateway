@@ -9,6 +9,8 @@ import {
   Inject,
   UseGuards,
   Query,
+  Res,
+  HttpStatus,
 } from '@nestjs/common';
 import { CreateVoucherDto } from './dto/create-voucher.dto';
 import { UpdateVoucherDto } from './dto/update-voucher.dto';
@@ -22,6 +24,7 @@ import { Roles } from 'src/common/decorators';
 import { PaginationDto } from './dto/pagination.dto';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdateVoucherProductItemDto } from './dto/voucher-product-item.dto';
+import { Response } from 'express';
 
 @Controller('voucher')
 export class VoucherController {
@@ -100,6 +103,40 @@ export class VoucherController {
       throw new RpcException(
         `[GATEWAY] Error al obtener los productos reservados: ${error.message}`,
       );
+    }
+  }
+
+  @Get('pdf/:id')
+  async generatePdf(
+    @Param('id') id: string,
+    @Query('download') download: string,
+    @Res() res: Response,
+  ) {
+    try {
+      const rawBuffer = await firstValueFrom(
+        this.clientProxy.send({ cmd: 'generate_voucher_pdf' }, id),
+      );
+
+      const buffer = Buffer.isBuffer(rawBuffer)
+        ? rawBuffer
+        : Buffer.from(rawBuffer.data);
+
+      // Verificación (opcional pero útil)
+      console.log('Buffer length:', buffer.length);
+      console.log('First 4 bytes:', buffer.slice(0, 4));
+
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader(
+        'Content-Disposition',
+        `${download === 'true' ? 'attachment' : 'inline'}; filename=comprobante-${id}.pdf`,
+      );
+
+      return res.status(HttpStatus.OK).send(buffer);
+    } catch (error) {
+      console.error('Error al generar o enviar el PDF:', error);
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ message: 'No se pudo generar el PDF del comprobante.' });
     }
   }
 

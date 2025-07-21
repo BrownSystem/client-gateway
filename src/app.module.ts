@@ -8,6 +8,7 @@ import { BranchProductModule } from './branch-product/branch-product.module';
 import { ContactsModule } from './contacts/contacts.module';
 import { BanksModule } from './banks/banks.module';
 import { VoucherModule } from './voucher/voucher.module';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { VoucherModule } from './voucher/voucher.module';
     ContactsModule,
     BanksModule,
     VoucherModule,
+    NotificationModule,
   ],
 })
 export class AppModule {}
