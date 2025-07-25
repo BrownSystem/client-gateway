@@ -29,6 +29,15 @@ let AuthController = class AuthController {
     constructor(client) {
         this.client = client;
     }
+    async findAllUser() {
+        try {
+            const response = await (0, rxjs_1.firstValueFrom)(this.client.send({ cmd: 'find.all.user' }, {}));
+            return response;
+        }
+        catch (error) {
+            throw new microservices_1.RpcException(error);
+        }
+    }
     async findAllUserBranch(id) {
         try {
             const response = await (0, rxjs_1.firstValueFrom)(this.client.send({ cmd: 'find.all.user.branch' }, id));
@@ -76,6 +85,14 @@ let AuthController = class AuthController {
     }
 };
 exports.AuthController = AuthController;
+__decorate([
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard, guards_1.RolesGuard),
+    (0, decorators_2.Roles)(role_auth_enum_1.RoleAuthEnum.MANAGER, role_auth_enum_1.RoleAuthEnum.ADMIN),
+    (0, common_1.Get)('users'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "findAllUser", null);
 __decorate([
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard, guards_1.RolesGuard),
     (0, decorators_2.Roles)(role_auth_enum_1.RoleAuthEnum.MANAGER, role_auth_enum_1.RoleAuthEnum.ADMIN),

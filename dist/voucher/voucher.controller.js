@@ -21,6 +21,7 @@ const rxjs_1 = require("rxjs");
 const pagination_dto_1 = require("./dto/pagination.dto");
 const create_payment_dto_1 = require("./dto/create-payment.dto");
 const voucher_product_item_dto_1 = require("./dto/voucher-product-item.dto");
+const generate_number_dto_1 = require("./dto/generate-number.dto");
 let VoucherController = class VoucherController {
     clientProxy;
     constructor(clientProxy) {
@@ -70,23 +71,25 @@ let VoucherController = class VoucherController {
             throw new microservices_1.RpcException(`[GATEWAY] Error al obtener los productos reservados: ${error.message}`);
         }
     }
-    async generatePdf(id, download, res) {
+    async generateHtml(id, download, res) {
         try {
-            const rawBuffer = await (0, rxjs_1.firstValueFrom)(this.clientProxy.send({ cmd: 'generate_voucher_pdf' }, id));
-            const buffer = Buffer.isBuffer(rawBuffer)
-                ? rawBuffer
-                : Buffer.from(rawBuffer.data);
-            console.log('Buffer length:', buffer.length);
-            console.log('First 4 bytes:', buffer.slice(0, 4));
-            res.setHeader('Content-Type', 'application/pdf');
-            res.setHeader('Content-Disposition', `${download === 'true' ? 'attachment' : 'inline'}; filename=comprobante-${id}.pdf`);
-            return res.status(common_1.HttpStatus.OK).send(buffer);
+            const html = await (0, rxjs_1.firstValueFrom)(this.clientProxy.send({ cmd: 'generate_voucher_html' }, id));
+            res.setHeader('Content-Disposition', `${download === 'true' ? 'attachment' : 'inline'}; filename=comprobante-${id}.html`);
+            return res.status(common_1.HttpStatus.OK).send(html);
         }
         catch (error) {
-            console.error('Error al generar o enviar el PDF:', error);
             return res
                 .status(common_1.HttpStatus.INTERNAL_SERVER_ERROR)
-                .json({ message: 'No se pudo generar el PDF del comprobante.' });
+                .json({ message: 'No se pudo generar el comprobante.' });
+        }
+    }
+    async generateNumber(dto) {
+        try {
+            const numberOfVoucher = await (0, rxjs_1.firstValueFrom)(this.clientProxy.send({ cmd: 'generate_number_voucher' }, dto));
+            return numberOfVoucher;
+        }
+        catch (error) {
+            throw new microservices_1.RpcException(`[GATEWAY] Error al obtener el numero de comprobante ${error}`);
         }
     }
     async updateReservedProduct(id, updateVoucherProductItemDto) {
@@ -129,14 +132,22 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], VoucherController.prototype, "findAllReservedProductsByBranchId", null);
 __decorate([
-    (0, common_1.Get)('pdf/:id'),
+    (0, common_1.Get)('html/:id'),
+    (0, common_1.Header)('Content-Type', 'text/html'),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Query)('download')),
     __param(2, (0, common_1.Res)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, String, Object]),
     __metadata("design:returntype", Promise)
-], VoucherController.prototype, "generatePdf", null);
+], VoucherController.prototype, "generateHtml", null);
+__decorate([
+    (0, common_1.Post)('generate-number'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [generate_number_dto_1.GenerateNumberVoucherDto]),
+    __metadata("design:returntype", Promise)
+], VoucherController.prototype, "generateNumber", null);
 __decorate([
     (0, common_1.Patch)('reserved-update/:id'),
     __param(0, (0, common_1.Param)('id')),

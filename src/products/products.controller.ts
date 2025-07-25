@@ -110,6 +110,21 @@ export class ProductsController implements IProductsController {
     }
   }
 
+  @Get('by-branches')
+  async SearchProductsWithAllBranch(@Query() paginationDto: PaginationDto) {
+    try {
+      const findProducts = await firstValueFrom(
+        this.client.send(
+          { cmd: 'search_products_with_all_branch_inventory' },
+          paginationDto,
+        ),
+      );
+      return findProducts;
+    } catch (error) {
+      throw new RpcException(error);
+    }
+  }
+
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(RoleAuthEnum.ADMIN, RoleAuthEnum.SELLER)
   @Patch('update/:id')

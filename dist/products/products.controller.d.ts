@@ -12,5 +12,6 @@ export declare class ProductsController implements IProductsController {
     printQrs(body: PrintQrDto, res: Response): Promise<void>;
     findAllProducts(paginationDto: PaginationDto): Promise<any>;
     findProductsBySearch(paginationDto: PaginationDto): Promise<any>;
+    SearchProductsWithAllBranch(paginationDto: PaginationDto): Promise<any>;
     updateProduct(id: string, updateProductDto: UpdateProductDto): Promise<any>;
 }

@@ -26,6 +26,21 @@ export class AuthController {
 
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(RoleAuthEnum.MANAGER, RoleAuthEnum.ADMIN)
+  @Get('users')
+  async findAllUser() {
+    try {
+      const response = await firstValueFrom(
+        this.client.send({ cmd: 'find.all.user' }, {}),
+      );
+
+      return response;
+    } catch (error) {
+      throw new RpcException(error);
+    }
+  }
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(RoleAuthEnum.MANAGER, RoleAuthEnum.ADMIN)
   @Get('users/:id')
   async findAllUserBranch(@Param('id', ParseUUIDPipe) id: string) {
     try {

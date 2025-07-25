@@ -9,20 +9,20 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LoginUserDto = void 0;
+exports.GenerateNumberVoucherDto = void 0;
 const class_validator_1 = require("class-validator");
-class LoginUserDto {
-    email;
-    password;
+const enum_1 = require("../../common/enum");
+class GenerateNumberVoucherDto {
+    type;
+    emissionBranchId;
 }
-exports.LoginUserDto = LoginUserDto;
+exports.GenerateNumberVoucherDto = GenerateNumberVoucherDto;
+__decorate([
+    (0, class_validator_1.IsEnum)(enum_1.VoucherType),
+    __metadata("design:type", String)
+], GenerateNumberVoucherDto.prototype, "type", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsEmail)(),
     __metadata("design:type", String)
-], LoginUserDto.prototype, "email", void 0);
-__decorate([
-    (0, class_validator_1.IsString)(),
-    __metadata("design:type", String)
-], LoginUserDto.prototype, "password", void 0);
-//# sourceMappingURL=login-user.dto.js.map
+], GenerateNumberVoucherDto.prototype, "emissionBranchId", void 0);
+//# sourceMappingURL=generate-number.dto.js.map

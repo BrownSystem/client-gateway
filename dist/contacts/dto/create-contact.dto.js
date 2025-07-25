@@ -28,12 +28,12 @@ class CreateContactDto {
 exports.CreateContactDto = CreateContactDto;
 __decorate([
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], CreateContactDto.prototype, "branchId", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], CreateContactDto.prototype, "name", void 0);
 __decorate([
@@ -43,15 +43,17 @@ __decorate([
 ], CreateContactDto.prototype, "businessName", void 0);
 __decorate([
     (0, class_validator_1.IsEnum)(enum_1.IvaCondition),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], CreateContactDto.prototype, "ivaCondition", void 0);
 __decorate([
     (0, class_validator_1.IsEnum)(enum_1.DocumentType),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], CreateContactDto.prototype, "documentType", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.Matches)(/^(\d{2}-\d{8}-\d|\d{7,8})$/, {
         message: 'Debe ser un CUIT/CUIL (XX-XXXXXXXX-X) o DNI (7 u 8 dígitos)',
     }),
@@ -79,6 +81,7 @@ __decorate([
 ], CreateContactDto.prototype, "address", void 0);
 __decorate([
     (0, class_validator_1.IsEnum)(enum_1.ContactType),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], CreateContactDto.prototype, "type", void 0);
 //# sourceMappingURL=create-contact.dto.js.map

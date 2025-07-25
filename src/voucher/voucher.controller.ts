@@ -26,6 +26,7 @@ import { PaginationDto } from './dto/pagination.dto';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdateVoucherProductItemDto } from './dto/voucher-product-item.dto';
 import { Response } from 'express';
+import { GenerateNumberVoucherDto } from './dto/generate-number.dto';
 
 @Controller('voucher')
 export class VoucherController {
@@ -124,10 +125,23 @@ export class VoucherController {
 
       return res.status(HttpStatus.OK).send(html);
     } catch (error) {
-      console.error('Error al generar el HTML:', error);
       return res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .json({ message: 'No se pudo generar el comprobante.' });
+    }
+  }
+
+  @Post('generate-number')
+  async generateNumber(@Body() dto: GenerateNumberVoucherDto) {
+    try {
+      const numberOfVoucher = await firstValueFrom(
+        this.clientProxy.send({ cmd: 'generate_number_voucher' }, dto),
+      );
+      return numberOfVoucher;
+    } catch (error) {
+      throw new RpcException(
+        `[GATEWAY] Error al obtener el numero de comprobante ${error}`,
+      );
     }
   }
 

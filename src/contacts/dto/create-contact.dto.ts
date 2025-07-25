@@ -2,7 +2,6 @@ import {
   IsBoolean,
   IsEmail,
   IsEnum,
-  IsNotEmpty,
   IsOptional,
   IsString,
   Matches,
@@ -11,33 +10,35 @@ import { ContactType, DocumentType, IvaCondition } from '../enum';
 
 export class CreateContactDto {
   @IsString()
-  @IsNotEmpty()
-  branchId: string;
+  @IsOptional()
+  branchId?: string;
 
   @IsString()
-  @IsNotEmpty()
-  name: string;
+  @IsOptional()
+  name?: string;
 
   @IsString()
   @IsOptional()
   businessName?: string;
 
   @IsEnum(IvaCondition)
-  ivaCondition: IvaCondition;
+  @IsOptional()
+  ivaCondition?: IvaCondition;
 
   @IsEnum(DocumentType)
-  documentType: DocumentType;
+  @IsOptional()
+  documentType?: DocumentType;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @Matches(/^(\d{2}-\d{8}-\d|\d{7,8})$/, {
     message: 'Debe ser un CUIT/CUIL (XX-XXXXXXXX-X) o DNI (7 u 8 dígitos)',
   })
-  documentNumber: string;
+  documentNumber?: string;
 
   @IsBoolean()
   @IsOptional()
-  available: boolean;
+  available?: boolean;
 
   @IsString()
   @IsOptional()
@@ -52,5 +53,6 @@ export class CreateContactDto {
   address?: string;
 
   @IsEnum(ContactType)
-  type: ContactType;
+  @IsOptional()
+  type?: ContactType;
 }

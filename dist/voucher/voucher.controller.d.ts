@@ -4,6 +4,7 @@ import { PaginationDto } from './dto/pagination.dto';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdateVoucherProductItemDto } from './dto/voucher-product-item.dto';
 import { Response } from 'express';
+import { GenerateNumberVoucherDto } from './dto/generate-number.dto';
 export declare class VoucherController {
     private readonly clientProxy;
     constructor(clientProxy: ClientProxy);
@@ -19,6 +20,7 @@ export declare class VoucherController {
     }>;
     searchVoucher(pagination: PaginationDto): Promise<any>;
     findAllReservedProductsByBranchId(pagination: PaginationDto): Promise<any>;
-    generatePdf(id: string, download: string, res: Response): Promise<Response<any, Record<string, any>>>;
+    generateHtml(id: string, download: string, res: Response): Promise<Response<any, Record<string, any>>>;
+    generateNumber(dto: GenerateNumberVoucherDto): Promise<any>;
     updateReservedProduct(id: string, updateVoucherProductItemDto: UpdateVoucherProductItemDto): Promise<any>;
 }

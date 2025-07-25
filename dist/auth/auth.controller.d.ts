@@ -5,6 +5,7 @@ import { UpdateUserchDto } from './dto/update-user.dto';
 export declare class AuthController {
     private readonly client;
     constructor(client: ClientProxy);
+    findAllUser(): Promise<any>;
     findAllUserBranch(id: string): Promise<any>;
     registerUser(registerUserDto: RegisterUserDto): Promise<any>;
     updateUser(id: string, updateUserDto: UpdateUserchDto): Promise<any>;

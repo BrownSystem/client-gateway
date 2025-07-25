@@ -36,7 +36,6 @@ __decorate([
 ], RegisterUserDto.prototype, "email", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsStrongPassword)(),
     __metadata("design:type", String)
 ], RegisterUserDto.prototype, "password", void 0);
 __decorate([

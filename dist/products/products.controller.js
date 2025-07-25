@@ -88,6 +88,15 @@ let ProductsController = class ProductsController {
             throw new microservices_1.RpcException(error);
         }
     }
+    async SearchProductsWithAllBranch(paginationDto) {
+        try {
+            const findProducts = await (0, rxjs_1.firstValueFrom)(this.client.send({ cmd: 'search_products_with_all_branch_inventory' }, paginationDto));
+            return findProducts;
+        }
+        catch (error) {
+            throw new microservices_1.RpcException(error);
+        }
+    }
     async updateProduct(id, updateProductDto) {
         try {
             const updateProduct = await (0, rxjs_1.firstValueFrom)(this.client.send({ cmd: 'update_product' }, {
@@ -143,6 +152,13 @@ __decorate([
     __metadata("design:paramtypes", [common_2.PaginationDto]),
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "findProductsBySearch", null);
+__decorate([
+    (0, common_1.Get)('by-branches'),
+    __param(0, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [common_2.PaginationDto]),
+    __metadata("design:returntype", Promise)
+], ProductsController.prototype, "SearchProductsWithAllBranch", null);
 __decorate([
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard, guards_1.RolesGuard),
     (0, decorators_1.Roles)(role_auth_enum_1.RoleAuthEnum.ADMIN, role_auth_enum_1.RoleAuthEnum.SELLER),
