@@ -1,9 +1,9 @@
-import { IsArray, ValidateNested, IsString, IsInt, Min } from 'class-validator';
+import { IsArray, ValidateNested, IsInt, Min, IsNumber } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class ProductQrItemDto {
-  @IsString()
-  code: string;
+  @IsNumber()
+  code: number;
 
   @IsInt()
   @Min(1)

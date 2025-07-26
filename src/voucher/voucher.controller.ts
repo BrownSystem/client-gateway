@@ -27,6 +27,7 @@ import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdateVoucherProductItemDto } from './dto/voucher-product-item.dto';
 import { Response } from 'express';
 import { GenerateNumberVoucherDto } from './dto/generate-number.dto';
+import { DeleteVoucherDto } from './dto/delete-voucher.dto';
 
 @Controller('voucher')
 export class VoucherController {
@@ -161,6 +162,24 @@ export class VoucherController {
     } catch (error) {
       throw new RpcException(
         `[GATEWAY] Error al actualizar el producto reservado: ${error.message}`,
+      );
+    }
+  }
+
+  @Post('delete-product/:id')
+  async deleteProduct(
+    @Param('id') id: string,
+    @Body() typeDeleteDto: DeleteVoucherDto,
+  ) {
+    try {
+      const { typeOfDelete } = typeDeleteDto;
+      const response = await firstValueFrom(
+        this.clientProxy.send({ cmd: 'type_delete' }, { id, typeOfDelete }),
+      );
+      return response;
+    } catch (error) {
+      throw new RpcException(
+        `[GATEWAY] Error al eliminar el producto: ${error.message}`,
       );
     }
   }

@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import { IsEnum, IsOptional, IsPositive, IsString } from 'class-validator';
-import { ConditionPayment } from 'src/common/enum';
+import { ConditionPayment, VoucherType } from 'src/common/enum';
 
 export class PaginationDto {
   @IsEnum(ConditionPayment)
@@ -20,6 +20,10 @@ export class PaginationDto {
   @IsOptional()
   @Type(() => Number)
   offset: number;
+
+  @IsEnum(VoucherType)
+  @IsOptional()
+  type?: VoucherType;
 
   @IsOptional()
   @IsString()

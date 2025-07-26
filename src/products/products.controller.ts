@@ -147,4 +147,16 @@ export class ProductsController implements IProductsController {
       throw new RpcException(error);
     }
   }
+
+  @Delete('delete-all')
+  async delete() {
+    try {
+      const deleteProducts = await firstValueFrom(
+        this.client.send({ cmd: 'delete-all-products' }, {}),
+      );
+      return deleteProducts;
+    } catch (error) {
+      throw new RpcException(error);
+    }
+  }
 }
