@@ -183,4 +183,18 @@ export class VoucherController {
       );
     }
   }
+
+  @Delete('delete-all')
+  async deleteProductAll() {
+    try {
+      const response = await firstValueFrom(
+        this.clientProxy.send({ cmd: 'delete' }, {}),
+      );
+      return response;
+    } catch (error) {
+      throw new RpcException(
+        `[GATEWAY] Error al eliminar el producto: ${error.message}`,
+      );
+    }
+  }
 }
