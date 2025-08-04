@@ -22,6 +22,7 @@ const pagination_dto_1 = require("./dto/pagination.dto");
 const create_payment_dto_1 = require("./dto/create-payment.dto");
 const voucher_product_item_dto_1 = require("./dto/voucher-product-item.dto");
 const generate_number_dto_1 = require("./dto/generate-number.dto");
+const delete_voucher_dto_1 = require("./dto/delete-voucher.dto");
 let VoucherController = class VoucherController {
     clientProxy;
     constructor(clientProxy) {
@@ -101,6 +102,25 @@ let VoucherController = class VoucherController {
             throw new microservices_1.RpcException(`[GATEWAY] Error al actualizar el producto reservado: ${error.message}`);
         }
     }
+    async deleteProduct(id, typeDeleteDto) {
+        try {
+            const { typeOfDelete } = typeDeleteDto;
+            const response = await (0, rxjs_1.firstValueFrom)(this.clientProxy.send({ cmd: 'type_delete' }, { id, typeOfDelete }));
+            return response;
+        }
+        catch (error) {
+            throw new microservices_1.RpcException(`[GATEWAY] Error al eliminar el producto: ${error.message}`);
+        }
+    }
+    async deleteProductAll() {
+        try {
+            const response = await (0, rxjs_1.firstValueFrom)(this.clientProxy.send({ cmd: 'delete' }, {}));
+            return response;
+        }
+        catch (error) {
+            throw new microservices_1.RpcException(`[GATEWAY] Error al eliminar el producto: ${error.message}`);
+        }
+    }
 };
 exports.VoucherController = VoucherController;
 __decorate([
@@ -156,6 +176,20 @@ __decorate([
     __metadata("design:paramtypes", [String, voucher_product_item_dto_1.UpdateVoucherProductItemDto]),
     __metadata("design:returntype", Promise)
 ], VoucherController.prototype, "updateReservedProduct", null);
+__decorate([
+    (0, common_1.Post)('delete-product/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, delete_voucher_dto_1.DeleteVoucherDto]),
+    __metadata("design:returntype", Promise)
+], VoucherController.prototype, "deleteProduct", null);
+__decorate([
+    (0, common_1.Delete)('delete-all'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], VoucherController.prototype, "deleteProductAll", null);
 exports.VoucherController = VoucherController = __decorate([
     (0, common_1.Controller)('voucher'),
     __param(0, (0, common_1.Inject)(config_1.NATS_SERVICE)),

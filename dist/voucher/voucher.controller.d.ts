@@ -5,6 +5,7 @@ import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdateVoucherProductItemDto } from './dto/voucher-product-item.dto';
 import { Response } from 'express';
 import { GenerateNumberVoucherDto } from './dto/generate-number.dto';
+import { DeleteVoucherDto } from './dto/delete-voucher.dto';
 export declare class VoucherController {
     private readonly clientProxy;
     constructor(clientProxy: ClientProxy);
@@ -23,4 +24,6 @@ export declare class VoucherController {
     generateHtml(id: string, download: string, res: Response): Promise<Response<any, Record<string, any>>>;
     generateNumber(dto: GenerateNumberVoucherDto): Promise<any>;
     updateReservedProduct(id: string, updateVoucherProductItemDto: UpdateVoucherProductItemDto): Promise<any>;
+    deleteProduct(id: string, typeDeleteDto: DeleteVoucherDto): Promise<any>;
+    deleteProductAll(): Promise<any>;
 }

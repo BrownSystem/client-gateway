@@ -18,6 +18,7 @@ class PaginationDto {
     emissionBranchId;
     limit;
     offset;
+    type;
     search;
     constructor(partial = {}) {
         Object.assign(this, partial);
@@ -48,6 +49,11 @@ __decorate([
     (0, class_transformer_1.Type)(() => Number),
     __metadata("design:type", Number)
 ], PaginationDto.prototype, "offset", void 0);
+__decorate([
+    (0, class_validator_1.IsEnum)(enum_1.VoucherType),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], PaginationDto.prototype, "type", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),

@@ -70,6 +70,22 @@ let ProductsController = class ProductsController {
             throw new microservices_1.RpcException(error);
         }
     }
+    async downloadProductsWithPdf(body, res) {
+        try {
+            const pdfBase64 = await (0, rxjs_1.firstValueFrom)(this.client.send({ cmd: 'generate_pdf_with_products' }, body.products));
+            const pdfBuffer = Buffer.from(pdfBase64, 'base64');
+            res.set({
+                'Content-Type': 'application/pdf',
+                'Content-Disposition': 'attachment; filename="qrs.pdf"',
+            });
+            const outputPath = path.join(__dirname, '../../test-output.pdf');
+            fs.writeFileSync(outputPath, pdfBuffer);
+            res.send(pdfBuffer);
+        }
+        catch (error) {
+            throw new microservices_1.RpcException(error);
+        }
+    }
     async findAllProducts(paginationDto) {
         try {
             const findAll = await (0, rxjs_1.firstValueFrom)(this.client.send({ cmd: 'find_all_product' }, paginationDto));
@@ -109,6 +125,15 @@ let ProductsController = class ProductsController {
             throw new microservices_1.RpcException(error);
         }
     }
+    async delete() {
+        try {
+            const deleteProducts = await (0, rxjs_1.firstValueFrom)(this.client.send({ cmd: 'delete-all-products' }, {}));
+            return deleteProducts;
+        }
+        catch (error) {
+            throw new microservices_1.RpcException(error);
+        }
+    }
 };
 exports.ProductsController = ProductsController;
 __decorate([
@@ -138,6 +163,14 @@ __decorate([
     __metadata("design:paramtypes", [print_qr_dto_1.PrintQrDto, Object]),
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "printQrs", null);
+__decorate([
+    (0, common_1.Post)('download-pdf-products'),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Res)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [print_qr_dto_1.PrintQrDto, Object]),
+    __metadata("design:returntype", Promise)
+], ProductsController.prototype, "downloadProductsWithPdf", null);
 __decorate([
     (0, common_1.Get)(),
     __param(0, (0, common_1.Query)()),
@@ -169,6 +202,12 @@ __decorate([
     __metadata("design:paramtypes", [String, update_product_dto_1.UpdateProductDto]),
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "updateProduct", null);
+__decorate([
+    (0, common_1.Delete)('delete-all'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], ProductsController.prototype, "delete", null);
 exports.ProductsController = ProductsController = __decorate([
     (0, common_1.Controller)('products'),
     __param(0, (0, common_1.Inject)(config_1.NATS_SERVICE)),

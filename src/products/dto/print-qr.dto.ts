@@ -1,4 +1,11 @@
-import { IsArray, ValidateNested, IsInt, Min, IsNumber } from 'class-validator';
+import {
+  IsArray,
+  ValidateNested,
+  IsInt,
+  Min,
+  IsNumber,
+  IsOptional,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class ProductQrItemDto {
@@ -7,7 +14,8 @@ export class ProductQrItemDto {
 
   @IsInt()
   @Min(1)
-  quantity: number;
+  @IsOptional()
+  quantity?: number;
 }
 
 export class PrintQrDto {

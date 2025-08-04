@@ -18,12 +18,13 @@ class ProductQrItemDto {
 }
 exports.ProductQrItemDto = ProductQrItemDto;
 __decorate([
-    (0, class_validator_1.IsString)(),
-    __metadata("design:type", String)
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
 ], ProductQrItemDto.prototype, "code", void 0);
 __decorate([
     (0, class_validator_1.IsInt)(),
     (0, class_validator_1.Min)(1),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", Number)
 ], ProductQrItemDto.prototype, "quantity", void 0);
 class PrintQrDto {

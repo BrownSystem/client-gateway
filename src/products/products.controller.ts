@@ -86,6 +86,30 @@ export class ProductsController implements IProductsController {
     }
   }
 
+  @Post('download-pdf-products')
+  async downloadProductsWithPdf(
+    @Body() body: PrintQrDto,
+    @Res() res: Response,
+  ) {
+    try {
+      const pdfBase64: string = await firstValueFrom(
+        this.client.send({ cmd: 'generate_pdf_with_products' }, body.products),
+      );
+
+      const pdfBuffer = Buffer.from(pdfBase64, 'base64');
+
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': 'attachment; filename="qrs.pdf"',
+      });
+      const outputPath = path.join(__dirname, '../../test-output.pdf');
+      fs.writeFileSync(outputPath, pdfBuffer);
+      res.send(pdfBuffer);
+    } catch (error) {
+      throw new RpcException(error);
+    }
+  }
+
   @Get()
   async findAllProducts(@Query() paginationDto: PaginationDto) {
     try {

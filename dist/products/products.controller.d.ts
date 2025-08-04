@@ -10,8 +10,10 @@ export declare class ProductsController implements IProductsController {
     createProduct(createProductDto: CreateProductDto): Promise<any>;
     uploadFile(file: Express.Multer.File): Promise<any>;
     printQrs(body: PrintQrDto, res: Response): Promise<void>;
+    downloadProductsWithPdf(body: PrintQrDto, res: Response): Promise<void>;
     findAllProducts(paginationDto: PaginationDto): Promise<any>;
     findProductsBySearch(paginationDto: PaginationDto): Promise<any>;
     SearchProductsWithAllBranch(paginationDto: PaginationDto): Promise<any>;
     updateProduct(id: string, updateProductDto: UpdateProductDto): Promise<any>;
+    delete(): Promise<any>;
 }

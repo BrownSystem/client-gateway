@@ -1,6 +1,6 @@
 export declare class ProductQrItemDto {
-    code: string;
-    quantity: number;
+    code: number;
+    quantity?: number;
 }
 export declare class PrintQrDto {
     products: ProductQrItemDto[];
