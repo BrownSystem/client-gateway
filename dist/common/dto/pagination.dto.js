@@ -14,6 +14,7 @@ const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
 class PaginationDto {
     branchId;
+    filterbystock;
     limit;
     offset;
     search;
@@ -31,6 +32,12 @@ __decorate([
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], PaginationDto.prototype, "branchId", void 0);
+__decorate([
+    (0, class_transformer_1.Type)(() => Boolean),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsBoolean)(),
+    __metadata("design:type", Boolean)
+], PaginationDto.prototype, "filterbystock", void 0);
 __decorate([
     (0, class_validator_1.IsPositive)(),
     (0, class_validator_1.IsOptional)(),

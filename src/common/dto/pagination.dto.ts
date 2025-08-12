@@ -6,6 +6,11 @@ export class PaginationDto {
   @IsOptional()
   branchId?: string;
 
+  @Type(() => Boolean)
+  @IsOptional()
+  @IsBoolean()
+  filterbystock?: boolean;
+
   @IsPositive()
   @IsOptional()
   @Type(() => Number)
@@ -23,10 +28,6 @@ export class PaginationDto {
   @IsString()
   @IsOptional()
   orderPrice: 'asc' | 'desc' | undefined;
-
-  @IsOptional()
-  @IsBoolean()
-  filterbystock?: boolean;
 
   constructor(partial: Partial<PaginationDto> = {}) {
     Object.assign(this, partial);

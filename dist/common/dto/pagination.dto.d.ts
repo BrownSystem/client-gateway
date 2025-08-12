@@ -1,5 +1,6 @@
 export declare class PaginationDto {
     branchId?: string;
+    filterbystock?: boolean;
     limit: number;
     offset: number;
     search?: string;
