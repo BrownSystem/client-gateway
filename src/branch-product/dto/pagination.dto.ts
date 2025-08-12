@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsOptional, IsPositive, IsString } from 'class-validator';
+import { IsBoolean, IsOptional, IsPositive, IsString } from 'class-validator';
 
 export class PaginationDto {
   @IsString()
@@ -14,6 +14,10 @@ export class PaginationDto {
   @IsOptional()
   @Type(() => Number)
   offset: number;
+
+  @IsOptional()
+  @IsBoolean()
+  filterByStock: boolean;
 
   constructor(partial: Partial<PaginationDto> = {}) {
     Object.assign(this, partial);
