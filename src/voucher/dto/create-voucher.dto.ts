@@ -21,11 +21,6 @@ import {
 } from 'src/common/enum';
 
 export class CreateVoucherDto {
-  @ValidateIf((o) => o.type !== 'REMITO')
-  @IsString()
-  @IsOptional()
-  number: string;
-
   @IsString()
   @IsOptional()
   letter?: string;
