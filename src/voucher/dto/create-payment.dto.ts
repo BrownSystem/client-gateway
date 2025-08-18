@@ -57,4 +57,8 @@ export class CreatePaymentDto {
 
   @IsString()
   voucherId: string;
+
+  @IsOptional()
+  @IsString()
+  observation: string;
 }
