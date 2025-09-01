@@ -23,4 +23,8 @@ export class PrintQrDto {
   @ValidateNested({ each: true })
   @Type(() => ProductQrItemDto)
   products: ProductQrItemDto[];
+
+  @IsArray()
+  @IsOptional()
+  branchOrder?: string[];
 }

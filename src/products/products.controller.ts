@@ -93,7 +93,7 @@ export class ProductsController implements IProductsController {
   ) {
     try {
       const pdfBase64: string = await firstValueFrom(
-        this.client.send({ cmd: 'generate_pdf_with_products' }, body.products),
+        this.client.send({ cmd: 'generate_pdf_with_products' }, body),
       );
 
       const pdfBuffer = Buffer.from(pdfBase64, 'base64');
