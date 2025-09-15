@@ -3,7 +3,8 @@ import { IsOptional, IsPositive, IsString } from 'class-validator';
 
 export class PaginationDto {
   @IsString()
-  branchId: string;
+  @IsOptional()
+  branchId?: string;
 
   @IsOptional()
   @IsString()

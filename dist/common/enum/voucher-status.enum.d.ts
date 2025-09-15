@@ -1,7 +1,0 @@
-export declare enum VoucherStatus {
-    PENDIENTE = "PENDIENTE",
-    PAGADO = "PAGADO",
-    CANCELADO = "CANCELADO",
-    ENTREGADO = "ENTREGADO",
-    RESERVADO = "RESERVADO"
-}

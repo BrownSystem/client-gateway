@@ -5,6 +5,7 @@ import {
   Min,
   IsNumber,
   IsOptional,
+  IsBoolean,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -27,4 +28,8 @@ export class PrintQrDto {
   @IsArray()
   @IsOptional()
   branchOrder?: string[];
+
+  @IsBoolean()
+  @IsOptional()
+  removeStockZero: boolean;
 }

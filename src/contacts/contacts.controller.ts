@@ -8,16 +8,18 @@ import {
   Query,
   ParseUUIDPipe,
   UseGuards,
+  Patch,
 } from '@nestjs/common';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { NATS_SERVICE } from 'src/config';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
-import { PaginationDto } from './dto';
+import { PaginationDto, UpdateContactDto } from './dto';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { RolesGuard } from 'src/common/guards';
 import { Roles } from 'src/common/decorators';
 import { RoleAuthEnum } from 'src/common/enum/role.auth.enum';
+import { HttpStatus } from '@nestjs/common';
 
 @Controller('contacts')
 export class ContactsController {
@@ -70,6 +72,31 @@ export class ContactsController {
       return contacts;
     } catch (error) {
       throw new RpcException(`Failed to search contacts: ${error.message}`);
+    }
+  }
+
+  @Patch(':id')
+  async update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() updateContactDto: UpdateContactDto,
+  ) {
+    try {
+      // Enviar el payload con la forma correcta: { id, data }
+      const payload = {
+        id,
+        data: updateContactDto,
+      };
+
+      const updatedContact = await firstValueFrom(
+        this.client.send({ cmd: 'update_contact' }, payload),
+      );
+
+      return updatedContact;
+    } catch (error) {
+      throw new RpcException({
+        message: `Failed to update contact: ${error.message}`,
+        status: HttpStatus.BAD_REQUEST,
+      });
     }
   }
 }

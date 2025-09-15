@@ -31,7 +31,7 @@ export class CreateContactDto {
 
   @IsString()
   @IsOptional()
-  @Matches(/^(\d{2}-\d{8}-\d|\d{7,8})$/, {
+  @Matches(/^(\d{2}\d{8}\d|\d{7,8})$/, {
     message: 'Debe ser un CUIT/CUIL (XX-XXXXXXXX-X) o DNI (7 u 8 dígitos)',
   })
   documentNumber?: string;

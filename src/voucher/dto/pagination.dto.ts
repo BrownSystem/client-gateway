@@ -1,5 +1,11 @@
 import { Type } from 'class-transformer';
-import { IsEnum, IsOptional, IsPositive, IsString } from 'class-validator';
+import {
+  IsDate,
+  IsEnum,
+  IsOptional,
+  IsPositive,
+  IsString,
+} from 'class-validator';
 import { ConditionPayment, VoucherType } from 'src/common/enum';
 
 export class PaginationDto {
@@ -28,6 +34,24 @@ export class PaginationDto {
   @IsOptional()
   @IsString()
   search?: string;
+
+  @IsOptional()
+  @IsString()
+  contactId?: string;
+
+  @IsOptional()
+  @IsDate()
+  @Type(() => Date)
+  dateFrom?: Date;
+
+  @IsOptional()
+  @IsDate()
+  @Type(() => Date)
+  dateUntil?: Date;
+
+  @IsString()
+  @IsOptional()
+  branch: string;
 
   constructor(partial: Partial<PaginationDto> = {}) {
     Object.assign(this, partial);

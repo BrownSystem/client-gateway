@@ -16,7 +16,11 @@ import {
 import { CreateVoucherDto } from './dto/create-voucher.dto';
 import { UpdateVoucherDto } from './dto/update-voucher.dto';
 import { NATS_SERVICE } from 'src/config';
-import { ClientProxy, RpcException } from '@nestjs/microservices';
+import {
+  ClientProxy,
+  RpcException,
+  ClientsModule,
+} from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { RolesGuard } from 'src/common/guards';
@@ -129,6 +133,19 @@ export class VoucherController {
       return res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .json({ message: 'No se pudo generar el comprobante.' });
+    }
+  }
+
+  @Get('one/:id')
+  async findOneVoucher(@Param('id') id: string) {
+    try {
+      const voucher = await firstValueFrom(
+        this.clientProxy.send({ cmd: 'find_one_voucher' }, { id }),
+      );
+
+      return voucher;
+    } catch (error) {
+      throw new RpcException(error);
     }
   }
 

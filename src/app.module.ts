@@ -9,6 +9,7 @@ import { ContactsModule } from './contacts/contacts.module';
 import { BanksModule } from './banks/banks.module';
 import { VoucherModule } from './voucher/voucher.module';
 import { NotificationModule } from './notification/notification.module';
+import { CardModule } from './card/card.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { NotificationModule } from './notification/notification.module';
     BanksModule,
     VoucherModule,
     NotificationModule,
+    CardModule,
   ],
 })
 export class AppModule {}
