@@ -9,6 +9,7 @@ import {
   ParseUUIDPipe,
   UseGuards,
   Patch,
+  HttpException,
 } from '@nestjs/common';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { NATS_SERVICE } from 'src/config';
@@ -47,7 +48,13 @@ export class ContactsController {
       );
       return createContact;
     } catch (error) {
-      throw new RpcException(`Failed to create contact: ${error.message}`);
+      throw new HttpException(
+        {
+          message: `Failed to creat contact: ${error.message}`,
+          cause: error, // opcional para debugging
+        },
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
