@@ -43,6 +43,10 @@ export class CreateInitialPaymentDto {
 
   @IsString()
   @IsOptional()
+  cardId?: string;
+
+  @IsString()
+  @IsOptional()
   chequeNumber?: string;
 
   @IsDate()
