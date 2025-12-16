@@ -23,6 +23,10 @@ import {
 export class CreateVoucherDto {
   @IsString()
   @IsOptional()
+  boxId: string;
+
+  @IsString()
+  @IsOptional()
   letter?: string;
 
   @IsEnum(VoucherType)
@@ -105,6 +109,10 @@ export class CreateVoucherDto {
   @IsString()
   @IsOptional()
   deliveredBy?: string;
+
+  @IsString()
+  @IsOptional()
+  cancelledInvoiceNumber: string;
 
   @IsOptional()
   @IsArray()

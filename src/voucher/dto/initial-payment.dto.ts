@@ -54,7 +54,21 @@ export class CreateInitialPaymentDto {
   @IsOptional()
   chequeDueDate?: Date;
 
+  @IsOptional()
+  @IsString({ message: 'El banco del cheque es obligatorio' })
+  chequeBank: string;
+
   @IsString()
   @IsOptional()
   chequeStatus?: string;
+
+  @IsString()
+  @IsOptional()
+  observation: string;
+
+  @IsString()
+  branchId: string;
+
+  @IsString()
+  branchName: string;
 }

@@ -14,13 +14,8 @@ import {
   Header,
 } from '@nestjs/common';
 import { CreateVoucherDto } from './dto/create-voucher.dto';
-import { UpdateVoucherDto } from './dto/update-voucher.dto';
 import { NATS_SERVICE } from 'src/config';
-import {
-  ClientProxy,
-  RpcException,
-  ClientsModule,
-} from '@nestjs/microservices';
+import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { RolesGuard } from 'src/common/guards';
@@ -39,6 +34,8 @@ export class VoucherController {
     @Inject(NATS_SERVICE) private readonly clientProxy: ClientProxy,
   ) {}
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(RoleAuthEnum.ADMIN, RoleAuthEnum.MANAGER)
   @Post()
   async create(@Body() createVoucherDto: CreateVoucherDto) {
     try {
@@ -58,6 +55,8 @@ export class VoucherController {
     }
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(RoleAuthEnum.ADMIN, RoleAuthEnum.MANAGER)
   @Post('register-payment')
   async registerPayment(@Body() paymentDto: CreatePaymentDto) {
     try {
@@ -90,6 +89,57 @@ export class VoucherController {
     } catch (error) {
       throw new RpcException(
         `[GATEWAY] Error al obtener las condiciones de pago: ${error.message}`,
+      );
+    }
+  }
+
+  @Get('search-by-contact')
+  async searchVoucherByContact(@Query() pagination: PaginationDto) {
+    try {
+      const response = await firstValueFrom(
+        this.clientProxy.send(
+          { cmd: 'find_all_vouchers_by_contact' },
+          pagination,
+        ),
+      );
+      return response;
+    } catch (error) {
+      throw new RpcException(
+        `[GATEWAY] Error al obtener las deudas de pago: ${error.message}`,
+      );
+    }
+  }
+
+  @Get('sales-monthly-by-branch')
+  async findSalesMonthlyByBranch(
+    @Query('month') month: number,
+    @Query('year') year: number,
+  ) {
+    try {
+      const response = await firstValueFrom(
+        this.clientProxy.send(
+          { cmd: 'find_monthly_sales_by_branch' },
+          { month, year },
+        ),
+      );
+      return response;
+    } catch (error) {
+      throw new RpcException(
+        `[GATEWAY] Error al obtener ventas por mes: ${error.message}`,
+      );
+    }
+  }
+
+  @Get('sales-by-branch')
+  async findSalesByBranch(@Query('branchId') branchId: string) {
+    try {
+      const response = await firstValueFrom(
+        this.clientProxy.send({ cmd: 'find_sales_by_branch' }, { branchId }),
+      );
+      return response;
+    } catch (error) {
+      throw new RpcException(
+        `[GATEWAY] Error al obtener ventas por sucursal: ${error.message}`,
       );
     }
   }
@@ -149,6 +199,8 @@ export class VoucherController {
     }
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(RoleAuthEnum.ADMIN, RoleAuthEnum.MANAGER)
   @Post('generate-number')
   async generateNumber(@Body() dto: GenerateNumberVoucherDto) {
     try {
@@ -163,6 +215,8 @@ export class VoucherController {
     }
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(RoleAuthEnum.ADMIN, RoleAuthEnum.MANAGER)
   @Patch('reserved-update/:id')
   async updateReservedProduct(
     @Param('id') id: string,
@@ -183,6 +237,8 @@ export class VoucherController {
     }
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(RoleAuthEnum.ADMIN, RoleAuthEnum.MANAGER)
   @Post('delete-product/:id')
   async deleteProduct(
     @Param('id') id: string,
@@ -201,6 +257,8 @@ export class VoucherController {
     }
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(RoleAuthEnum.ADMIN, RoleAuthEnum.MANAGER)
   @Delete('delete-all')
   async deleteProductAll() {
     try {
@@ -211,6 +269,27 @@ export class VoucherController {
     } catch (error) {
       throw new RpcException(
         `[GATEWAY] Error al eliminar el producto: ${error.message}`,
+      );
+    }
+  }
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(RoleAuthEnum.ADMIN, RoleAuthEnum.MANAGER)
+  @Delete('delete-payment/:id')
+  async deletePayment(@Param('id') id: string) {
+    try {
+      const response = await firstValueFrom(
+        this.clientProxy.send({ cmd: 'delete_payment' }, { id }),
+      );
+
+      return {
+        success: true,
+        data: response?.data || response,
+        message: response?.message || 'Pago eliminado correctamente.',
+      };
+    } catch (error) {
+      throw new RpcException(
+        `[GATEWAY] Error al eliminar el pago: ${error.message}`,
       );
     }
   }

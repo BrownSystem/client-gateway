@@ -24,6 +24,7 @@ import { firstValueFrom } from 'rxjs';
 import { ManipulateStockDto } from './dto/manipulate-stock.dto';
 import { PaginationDto } from './dto/pagination.dto';
 import { Response } from 'express';
+import { UpdateStockDto } from './dto/update-stock.dto';
 
 @Controller('inventory')
 export class BranchProductController {
@@ -121,6 +122,27 @@ export class BranchProductController {
       return updatedInventory;
     } catch (error) {
       throw new RpcException(error);
+    }
+  }
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(RoleAuthEnum.ADMIN)
+  @Patch('bulk-update-stock')
+  async updateStockFromList(@Body() updateStockDto: UpdateStockDto[]) {
+    try {
+      const result = await firstValueFrom(
+        this.client.send(
+          { cmd: 'branch_product_stock_update' },
+          updateStockDto,
+        ),
+      );
+
+      return {
+        message: 'Stock actualizado correctamente',
+        result,
+      };
+    } catch (error) {
+      throw new RpcException(error?.message || 'Error actualizando stock');
     }
   }
 }

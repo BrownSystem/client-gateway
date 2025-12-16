@@ -7,6 +7,7 @@ import {
   IsOptional,
   IsPositive,
   IsString,
+  ValidateIf,
 } from 'class-validator';
 import { Currency, PaymentMethod } from 'src/common/enum';
 
@@ -46,14 +47,26 @@ export class CreatePaymentDto {
   @IsString()
   cardId?: string;
 
-  @IsOptional()
-  @IsString()
-  chequeNumber?: string;
+  // 📝 Campos obligatorios solo si es CHEQUE o CHEQUE_TERCERO
+  @ValidateIf((o) => o.method === PaymentMethod.CHEQUE_TERCERO)
+  @IsString({
+    message: 'El número de cheque es obligatorio para pagos con cheque',
+  })
+  chequeNumber: string;
 
-  @IsOptional()
-  @IsDate()
+  @ValidateIf((o) => o.method === PaymentMethod.CHEQUE_TERCERO)
+  @IsDate({ message: 'La fecha de vencimiento del cheque es obligatoria' })
   @Type(() => Date)
-  chequeDueDate?: Date;
+  chequeDueDate: Date;
+
+  @ValidateIf((o) => o.method === PaymentMethod.CHEQUE_TERCERO)
+  @IsDate({ message: 'La fecha de recepción del cheque es obligatoria' })
+  @Type(() => Date)
+  chequeReceived: Date;
+
+  @ValidateIf((o) => o.method === PaymentMethod.CHEQUE_TERCERO)
+  @IsString({ message: 'El banco del cheque es obligatorio' })
+  chequeBank: string;
 
   @IsOptional()
   @IsString()
@@ -65,4 +78,8 @@ export class CreatePaymentDto {
   @IsOptional()
   @IsString()
   observation: string;
+
+  @IsString()
+  @IsOptional()
+  boxId?: string;
 }

@@ -10,6 +10,10 @@ import { BanksModule } from './banks/banks.module';
 import { VoucherModule } from './voucher/voucher.module';
 import { NotificationModule } from './notification/notification.module';
 import { CardModule } from './card/card.module';
+import { BoxCategoryModule } from './box-category/box-category.module';
+import { BoxDailyModule } from './box-daily/box-daily.module';
+import { TransactionModule } from './transaction/transaction.module';
+import { CheckBookModule } from './check-book/check-book.module';
 
 @Module({
   imports: [
@@ -24,6 +28,10 @@ import { CardModule } from './card/card.module';
     VoucherModule,
     NotificationModule,
     CardModule,
+    BoxCategoryModule,
+    BoxDailyModule,
+    TransactionModule,
+    CheckBookModule,
   ],
 })
 export class AppModule {}

@@ -30,6 +30,7 @@ import { Response } from 'express';
 import * as fs from 'fs';
 import * as path from 'path';
 import { PrintQrDto } from './dto/print-qr.dto';
+import { UpdateStockDto } from './dto/update-stock.dto';
 
 @Controller('products')
 export class ProductsController implements IProductsController {
@@ -163,6 +164,23 @@ export class ProductsController implements IProductsController {
           {
             id,
             ...updateProductDto,
+          },
+        ),
+      );
+      return updateProduct;
+    } catch (error) {
+      throw new RpcException(error);
+    }
+  }
+
+  @Patch('update-stock')
+  async updateStock(@Body() updateStockDto: UpdateStockDto) {
+    try {
+      const updateProduct = await firstValueFrom(
+        this.client.send(
+          { cmd: 'update_stock' },
+          {
+            updateStockDto,
           },
         ),
       );
