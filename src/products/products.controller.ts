@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpStatus,
   Inject,
   Param,
   Patch,
@@ -169,7 +170,10 @@ export class ProductsController implements IProductsController {
       );
       return updateProduct;
     } catch (error) {
-      throw new RpcException(error);
+      throw new RpcException({
+        message: error.message,
+        status: HttpStatus.BAD_REQUEST,
+      });
     }
   }
 
